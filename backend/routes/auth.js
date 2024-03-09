@@ -2,8 +2,8 @@ import express from "express";
 
 const authRouter = express.Router();
 
-authRouter.get("/user", (req, res) => {
-  res.json({ msg: "Nhat" });
+authRouter.get("/api/signup", (req, res) => {
+  const { name, email, password } = req.body;
 });
 
 export default authRouter;
