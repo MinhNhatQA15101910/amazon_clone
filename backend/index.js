@@ -7,6 +7,7 @@ import authRouter from "./routes/auth.js";
 const app = express();
 env.config();
 
+app.use(express.json());
 app.use(authRouter);
 
 mongoose
