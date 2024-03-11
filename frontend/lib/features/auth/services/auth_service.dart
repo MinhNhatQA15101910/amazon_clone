@@ -1,10 +1,10 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:frontend/common/widgets/bottom_bar.dart';
 import 'package:frontend/constants/error_handling.dart';
 import 'package:frontend/constants/global_variables.dart';
 import 'package:frontend/constants/utils.dart';
-import 'package:frontend/features/home/screens/home_screen.dart';
 import 'package:frontend/models/user.dart';
 import 'package:frontend/providers/user_provider.dart';
 import 'package:http/http.dart' as http;
@@ -91,7 +91,7 @@ class AuthService {
           await prefs.setString('x-auth-token', jsonDecode(res.body)['token']);
           // ignore: use_build_context_synchronously
           Navigator.of(context).pushNamedAndRemoveUntil(
-            HomeScreen.routeName,
+            BottomBar.routeName,
             (route) => false,
           );
         },
