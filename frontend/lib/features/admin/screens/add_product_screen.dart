@@ -3,11 +3,11 @@ import 'dart:io';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:frontend/common/widgets/custom_button.dart';
 import 'package:frontend/common/widgets/custom_textfield.dart';
 import 'package:frontend/constants/global_variables.dart';
 import 'package:frontend/constants/utils.dart';
+import 'package:frontend/features/admin/services/admin_service.dart';
 
 class AddProductScreen extends StatefulWidget {
   static const String routeName = '/add-product';
@@ -23,6 +23,10 @@ class _AddProductScreenState extends State<AddProductScreen> {
   final _priceController = TextEditingController();
   final _quantityController = TextEditingController();
 
+  final _adminService = AdminService();
+
+  final _addProductFormKey = GlobalKey<FormState>();
+
   var _category = 'Mobiles';
   List<File> _images = [];
 
@@ -33,6 +37,20 @@ class _AddProductScreenState extends State<AddProductScreen> {
     'Books',
     'Fashion',
   ];
+
+  void _sellProduct() {
+    if (_addProductFormKey.currentState!.validate() && _images.isNotEmpty) {
+      _adminService.sellProduct(
+        context: context,
+        name: _productNameController.text.trim(),
+        description: _descriptionController.text.trim(),
+        price: double.parse(_priceController.text.trim()),
+        quantity: double.parse(_quantityController.text.trim()),
+        category: _category,
+        images: _images,
+      );
+    }
+  }
 
   void _selectImages() async {
     var res = await pickImages(_images);
@@ -62,6 +80,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
       ),
       body: SingleChildScrollView(
         child: Form(
+          key: _addProductFormKey,
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10),
             child: Column(
@@ -160,7 +179,10 @@ class _AddProductScreenState extends State<AddProductScreen> {
                   ),
                 ),
                 const SizedBox(height: 10),
-                CustomButton(text: 'Sell', onTap: () {}),
+                CustomButton(
+                  text: 'Sell',
+                  onTap: _sellProduct,
+                ),
               ],
             ),
           ),

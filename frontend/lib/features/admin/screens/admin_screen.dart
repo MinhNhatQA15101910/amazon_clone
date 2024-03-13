@@ -24,7 +24,7 @@ class _AdminScreenState extends State<AdminScreen> {
     ),
   ];
 
-  void updatePage(int page) {
+  void _updatePage(int page) {
     setState(() {
       _page = page;
     });
@@ -72,7 +72,7 @@ class _AdminScreenState extends State<AdminScreen> {
         unselectedItemColor: GlobalVariables.unselectedNavBarColor,
         backgroundColor: GlobalVariables.backgroundColor,
         iconSize: 28,
-        onTap: updatePage,
+        onTap: _updatePage,
         items: [
           // Home Item
           BottomNavigationBarItem(
