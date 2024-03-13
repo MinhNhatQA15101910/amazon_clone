@@ -49,6 +49,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.1.1"
+  cloudinary_public:
+    dependency: "direct main"
+    description:
+      name: cloudinary_public
+      sha256: "30c2aac5a31b468e5e955d2bbbac3eebcd1c66c9c7c2ffd75828606503bdda68"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.23.1"
   collection:
     dependency: transitive
     description:
@@ -65,6 +73,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.6"
+  dio:
+    dependency: transitive
+    description:
+      name: dio
+      sha256: "49af28382aefc53562459104f64d16b9dfd1e8ef68c862d5af436cc8356ce5a8"
+      url: "https://pub.dev"
+    source: hosted
+    version: "5.4.1"
   dotted_border:
     dependency: "direct main"
     description:
