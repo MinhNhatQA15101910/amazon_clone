@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:cloudinary_public/cloudinary_public.dart';
@@ -66,5 +67,39 @@ class AdminService {
       // ignore: use_build_context_synchronously
       showSnackbar(context, e.toString());
     }
+  }
+
+  Future<List<Product>> fetchAllProducts(BuildContext context) async {
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    List<Product> productList = [];
+    try {
+      http.Response res = await http.get(
+        Uri.parse('$uri/admin/get-products'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'x-auth-token': userProvider.user.token,
+        },
+      );
+
+      httpErrorHandler(
+        response: res,
+        // ignore: use_build_context_synchronously
+        context: context,
+        onSuccess: () {
+          for (var object in jsonDecode(res.body)) {
+            productList.add(
+              Product.fromJson(
+                jsonEncode(object),
+              ),
+            );
+          }
+        },
+      );
+    } catch (e) {
+      // ignore: use_build_context_synchronously
+      showSnackbar(context, e.toString());
+    }
+
+    return productList;
   }
 }
