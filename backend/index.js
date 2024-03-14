@@ -2,8 +2,9 @@ import env from "dotenv";
 import express from "express";
 import mongoose from "mongoose";
 
-import adminRouter from "./routes/admin.js"
+import adminRouter from "./routes/admin.js";
 import authRouter from "./routes/auth.js";
+import productRouter from "./routes/product.js";
 
 const app = express();
 env.config();
@@ -11,6 +12,7 @@ env.config();
 app.use(express.json());
 app.use(authRouter);
 app.use(adminRouter);
+app.use(productRouter);
 
 mongoose
   .connect(process.env.DB)
