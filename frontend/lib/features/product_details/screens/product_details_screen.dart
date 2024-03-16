@@ -4,6 +4,7 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:frontend/common/widgets/custom_button.dart';
 import 'package:frontend/common/widgets/stars.dart';
 import 'package:frontend/constants/global_variables.dart';
+import 'package:frontend/features/product_details/services/product_details_service.dart';
 import 'package:frontend/features/search/screens/search_screen.dart';
 import 'package:frontend/models/product.dart';
 
@@ -21,6 +22,8 @@ class ProductDetailsScreen extends StatefulWidget {
 }
 
 class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
+  final _productDetailsService = ProductDetailsService();
+
   void _navigateToSearchScreen(String query) {
     Navigator.of(context).pushNamed(SearchScreen.routeName, arguments: query);
   }
@@ -229,7 +232,13 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                 Icons.star,
                 color: GlobalVariables.secondaryColor,
               ),
-              onRatingUpdate: (rating) {},
+              onRatingUpdate: (rating) {
+                _productDetailsService.rateProduct(
+                  context: context,
+                  product: widget.product,
+                  rating: rating,
+                );
+              },
             )
           ],
         ),

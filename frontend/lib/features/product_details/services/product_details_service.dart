@@ -10,7 +10,7 @@ import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 
 class ProductDetailsService {
-  void sellProduct({
+  void rateProduct({
     required BuildContext context,
     required Product product,
     required double rating,
@@ -35,10 +35,7 @@ class ProductDetailsService {
         response: res,
         // ignore: use_build_context_synchronously
         context: context,
-        onSuccess: () {
-          showSnackbar(context, 'Product Added Successfully!');
-          Navigator.pop(context);
-        },
+        onSuccess: () {},
       );
     } catch (e) {
       // ignore: use_build_context_synchronously
