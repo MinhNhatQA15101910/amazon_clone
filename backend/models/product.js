@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import ratingSchema from "./rating";
 
 const productSchema = mongoose.Schema({
   name: {
@@ -31,6 +32,7 @@ const productSchema = mongoose.Schema({
       trim: true,
     },
   ],
+  ratings: [ratingSchema],
 });
 
 const Product = mongoose.model("Product", productSchema);
