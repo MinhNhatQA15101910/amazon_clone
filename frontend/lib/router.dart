@@ -4,6 +4,7 @@ import 'package:frontend/features/admin/screens/add_product_screen.dart';
 import 'package:frontend/features/auth/screens/auth_screen.dart';
 import 'package:frontend/features/home/screens/category_deals_screen.dart';
 import 'package:frontend/features/home/screens/home_screen.dart';
+import 'package:frontend/features/search/screens/search_screen.dart';
 
 Route<dynamic> generateRoute(RouteSettings routeSettings) {
   switch (routeSettings.name) {
@@ -28,6 +29,14 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
         settings: routeSettings,
         builder: (_) => CategoryDealsScreen(
           category: category,
+        ),
+      );
+    case SearchScreen.routeName:
+      var searchQuery = routeSettings.arguments as String;
+      return MaterialPageRoute(
+        settings: routeSettings,
+        builder: (_) => SearchScreen(
+          searchQuery: searchQuery,
         ),
       );
     case AddProductScreen.routeName:

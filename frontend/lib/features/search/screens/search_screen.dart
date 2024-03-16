@@ -1,22 +1,45 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/constants/global_variables.dart';
 import 'package:frontend/common/widgets/address_box.dart';
-import 'package:frontend/features/home/widgets/carousel_image.dart';
-import 'package:frontend/features/home/widgets/deal_of_day.dart';
-import 'package:frontend/features/home/widgets/top_categories.dart';
-import 'package:frontend/features/search/screens/search_screen.dart';
+import 'package:frontend/common/widgets/loader.dart';
+import 'package:frontend/constants/global_variables.dart';
+import 'package:frontend/features/search/services/search_service.dart';
+import 'package:frontend/features/search/widgets/searched_product.dart';
+import 'package:frontend/models/product.dart';
 
-class HomeScreen extends StatefulWidget {
-  static const String routeName = '/home';
-  const HomeScreen({super.key});
+class SearchScreen extends StatefulWidget {
+  static const String routeName = '/search-screen';
+  const SearchScreen({
+    super.key,
+    required this.searchQuery,
+  });
+
+  final String searchQuery;
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  State<StatefulWidget> createState() => _SearchScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _SearchScreenState extends State<SearchScreen> {
+  final _searchService = SearchService();
+
+  List<Product>? _products;
+
+  void _fetchSearchedProducts() async {
+    _products = await _searchService.fetchSearchedProducts(
+      context: context,
+      searchQuery: widget.searchQuery,
+    );
+    setState(() {});
+  }
+
   void _navigateToSearchScreen(String query) {
     Navigator.of(context).pushNamed(SearchScreen.routeName, arguments: query);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchSearchedProducts();
   }
 
   @override
@@ -97,18 +120,24 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
       ),
-      body: const SingleChildScrollView(
-        child: Column(
-          children: [
-            AddressBox(),
-            SizedBox(height: 10),
-            TopCategories(),
-            SizedBox(height: 10),
-            CarouselImage(),
-            DealOfDay(),
-          ],
-        ),
-      ),
+      body: _products == null
+          ? const Loader()
+          : Column(
+              children: [
+                const AddressBox(),
+                const SizedBox(height: 10),
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: _products!.length,
+                    itemBuilder: (context, index) {
+                      return SearchedProduct(
+                        product: _products![index],
+                      );
+                    },
+                  ),
+                )
+              ],
+            ),
     );
   }
 }
