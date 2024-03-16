@@ -2,9 +2,10 @@ import env from "dotenv";
 import express from "express";
 import mongoose from "mongoose";
 
-import adminRouter from "./routes/admin.js";
-import authRouter from "./routes/auth.js";
-import productRouter from "./routes/product.js";
+import adminRouter from "./routers/admin_router.js";
+import authRouter from "./routers/auth_router.js";
+import productRouter from "./routers/product_router.js";
+import userRouter from "./routers/user_router.js";
 
 const app = express();
 env.config();
@@ -13,6 +14,7 @@ app.use(express.json());
 app.use(authRouter);
 app.use(adminRouter);
 app.use(productRouter);
+app.use(userRouter);
 
 mongoose
   .connect(process.env.DB)
