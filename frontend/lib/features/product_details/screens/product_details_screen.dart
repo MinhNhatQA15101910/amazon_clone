@@ -7,6 +7,8 @@ import 'package:frontend/constants/global_variables.dart';
 import 'package:frontend/features/product_details/services/product_details_service.dart';
 import 'package:frontend/features/search/screens/search_screen.dart';
 import 'package:frontend/models/product.dart';
+import 'package:frontend/providers/user_provider.dart';
+import 'package:provider/provider.dart';
 
 class ProductDetailsScreen extends StatefulWidget {
   static const String routeName = '/product-details';
@@ -24,8 +26,32 @@ class ProductDetailsScreen extends StatefulWidget {
 class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   final _productDetailsService = ProductDetailsService();
 
+  double avgRating = 0;
+  double myRating = 0;
+
   void _navigateToSearchScreen(String query) {
     Navigator.of(context).pushNamed(SearchScreen.routeName, arguments: query);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    double totalRating = 0;
+    for (var rating in widget.product.ratings!) {
+      totalRating += rating.rating;
+      if (rating.userId ==
+          Provider.of<UserProvider>(
+            context,
+            listen: false,
+          ).user.id) {
+        myRating = rating.rating;
+      }
+    }
+
+    if (totalRating != 0) {
+      avgRating = totalRating / widget.product.ratings!.length;
+    }
   }
 
   @override
@@ -118,8 +144,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                   Text(
                     widget.product.id!,
                   ),
-                  const Stars(
-                    rating: 4,
+                  Stars(
+                    rating: avgRating,
                   ),
                 ],
               ),
@@ -222,7 +248,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
               ),
             ),
             RatingBar.builder(
-              initialRating: 0,
+              initialRating: myRating,
               minRating: 1,
               direction: Axis.horizontal,
               allowHalfRating: true,
