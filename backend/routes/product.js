@@ -57,4 +57,25 @@ productRouter.post("/api/rate-product", auth, async (req, res) => {
   }
 });
 
+// Get deal of the day
+productRouter.get("/api/deal-of-day", auth, async (req, res) => {
+  try {
+    let products = await Product.find({});
+
+    products = products.sort((a, b) => {
+      let aSum = 0,
+        bSum = 0;
+
+      a.ratings.forEach((rating) => (aSum += rating.rating));
+      b.ratings.forEach((rating) => (bSum += rating.rating));
+
+      return aSum < bSum ? 1 : -1;
+    });
+
+    res.json(products[0]);
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
 export default productRouter;

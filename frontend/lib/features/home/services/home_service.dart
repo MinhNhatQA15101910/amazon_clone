@@ -46,4 +46,41 @@ class HomeService {
 
     return productList;
   }
+
+  Future<Product> fetchDealOfDay({
+    required BuildContext context,
+  }) async {
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    Product product = const Product(
+      name: '',
+      description: '',
+      quantity: 0,
+      images: [],
+      category: '',
+      price: 0,
+    );
+    try {
+      http.Response res = await http.get(
+        Uri.parse('$uri/api/deal-of-day'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'x-auth-token': userProvider.user.token,
+        },
+      );
+
+      httpErrorHandler(
+        response: res,
+        // ignore: use_build_context_synchronously
+        context: context,
+        onSuccess: () {
+          product = Product.fromJson(res.body);
+        },
+      );
+    } catch (e) {
+      // ignore: use_build_context_synchronously
+      showSnackbar(context, e.toString());
+    }
+
+    return product;
+  }
 }
