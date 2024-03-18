@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/features/cart/services/cart_service.dart';
+import 'package:frontend/features/product_details/screens/product_details_screen.dart';
 import 'package:frontend/features/product_details/services/product_details_service.dart';
 import 'package:frontend/models/product.dart';
 import 'package:frontend/providers/user_provider.dart';
@@ -18,11 +20,26 @@ class CartProduct extends StatefulWidget {
 
 class _CartProductState extends State<CartProduct> {
   final _productDetailsService = ProductDetailsService();
+  final _cartService = CartService();
 
   void _increaseQuantity(Product product) {
     _productDetailsService.addToCart(
       context: context,
       product: product,
+    );
+  }
+
+  void _decreaseQuantity(Product product) {
+    _cartService.removeFromCart(
+      context: context,
+      product: product,
+    );
+  }
+
+  void _navigateToProductDetailsScreen(Product product) {
+    Navigator.of(context).pushNamed(
+      ProductDetailsScreen.routeName,
+      arguments: product,
     );
   }
 
@@ -40,70 +57,73 @@ class _CartProductState extends State<CartProduct> {
             right: 10,
             bottom: 15,
           ),
-          child: Row(
-            children: [
-              Image.network(
-                product.images[0],
-                fit: BoxFit.contain,
-                width: 120,
-                height: 120,
-              ),
-              Column(
-                children: [
-                  Container(
-                    width: 220,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 10,
-                    ),
-                    child: Text(
-                      product.name,
-                      style: const TextStyle(
-                        fontSize: 16,
+          child: GestureDetector(
+            onTap: () => _navigateToProductDetailsScreen(product),
+            child: Row(
+              children: [
+                Image.network(
+                  product.images[0],
+                  fit: BoxFit.contain,
+                  width: 120,
+                  height: 120,
+                ),
+                Column(
+                  children: [
+                    Container(
+                      width: 220,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 10,
                       ),
-                      maxLines: 2,
-                    ),
-                  ),
-                  Container(
-                    width: 220,
-                    padding: const EdgeInsets.only(
-                      left: 10,
-                      top: 5,
-                    ),
-                    child: Text(
-                      '\$${product.price}',
-                      style: const TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
+                      child: Text(
+                        product.name,
+                        style: const TextStyle(
+                          fontSize: 16,
+                        ),
+                        maxLines: 2,
                       ),
-                      maxLines: 2,
                     ),
-                  ),
-                  Container(
-                    width: 220,
-                    padding: const EdgeInsets.only(
-                      left: 10,
-                    ),
-                    child: const Text(
-                      'Eligible for FREE Shipping',
-                    ),
-                  ),
-                  Container(
-                    width: 220,
-                    padding: const EdgeInsets.only(
-                      left: 10,
-                      top: 5,
-                    ),
-                    child: const Text(
-                      'In Stock',
-                      style: TextStyle(
-                        color: Colors.teal,
+                    Container(
+                      width: 220,
+                      padding: const EdgeInsets.only(
+                        left: 10,
+                        top: 5,
                       ),
-                      maxLines: 2,
+                      child: Text(
+                        '\$${product.price}',
+                        style: const TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        maxLines: 2,
+                      ),
                     ),
-                  ),
-                ],
-              )
-            ],
+                    Container(
+                      width: 220,
+                      padding: const EdgeInsets.only(
+                        left: 10,
+                      ),
+                      child: const Text(
+                        'Eligible for FREE Shipping',
+                      ),
+                    ),
+                    Container(
+                      width: 220,
+                      padding: const EdgeInsets.only(
+                        left: 10,
+                        top: 5,
+                      ),
+                      child: const Text(
+                        'In Stock',
+                        style: TextStyle(
+                          color: Colors.teal,
+                        ),
+                        maxLines: 2,
+                      ),
+                    ),
+                  ],
+                )
+              ],
+            ),
           ),
         ),
         Container(
@@ -122,13 +142,16 @@ class _CartProductState extends State<CartProduct> {
                 ),
                 child: Row(
                   children: [
-                    Container(
-                      width: 35,
-                      height: 32,
-                      alignment: Alignment.center,
-                      child: const Icon(
-                        Icons.remove,
-                        size: 18,
+                    InkWell(
+                      onTap: () => _decreaseQuantity(product),
+                      child: Container(
+                        width: 35,
+                        height: 32,
+                        alignment: Alignment.center,
+                        child: const Icon(
+                          Icons.remove,
+                          size: 18,
+                        ),
                       ),
                     ),
                     DecoratedBox(
