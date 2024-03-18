@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:frontend/common/widgets/custom_textfield.dart';
 import 'package:frontend/constants/global_variables.dart';
 import 'package:frontend/constants/utils.dart';
+import 'package:frontend/features/address/services/address_service.dart';
 import 'package:frontend/providers/user_provider.dart';
 import 'package:pay/pay.dart';
 import 'package:provider/provider.dart';
@@ -20,6 +21,8 @@ class AddressScreen extends StatefulWidget {
 }
 
 class _AddressScreenState extends State<AddressScreen> {
+  final _addressService = AddressService();
+
   final _flatBuildingController = TextEditingController();
   final _areaController = TextEditingController();
   final _pincodeController = TextEditingController();
@@ -31,8 +34,41 @@ class _AddressScreenState extends State<AddressScreen> {
 
   final List<PaymentItem> _paymentItems = [];
 
-  void _onApplePayResult(res) {}
-  void _onGooglePayResult(res) {}
+  void _onApplePayResult(res) {
+    if (Provider.of<UserProvider>(context, listen: false)
+        .user
+        .address
+        .isEmpty) {
+      _addressService.saveUserAddress(
+        context: context,
+        address: _addressToBeUsed,
+      );
+    }
+
+    _addressService.placeOrder(
+      context: context,
+      address: _addressToBeUsed,
+      totalPrice: double.parse(widget.totalAmount),
+    );
+  }
+
+  void _onGooglePayResult(res) {
+    if (Provider.of<UserProvider>(context, listen: false)
+        .user
+        .address
+        .isEmpty) {
+      _addressService.saveUserAddress(
+        context: context,
+        address: _addressToBeUsed,
+      );
+    }
+
+    _addressService.placeOrder(
+      context: context,
+      address: _addressToBeUsed,
+      totalPrice: double.parse(widget.totalAmount),
+    );
+  }
 
   void _payPressed(String addressFromProvider) {
     _addressToBeUsed = "";
