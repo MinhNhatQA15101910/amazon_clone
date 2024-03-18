@@ -2,6 +2,7 @@ import 'package:badges/badges.dart' as badges;
 import 'package:flutter/material.dart';
 import 'package:frontend/constants/global_variables.dart';
 import 'package:frontend/features/account/screens/account_screen.dart';
+import 'package:frontend/features/cart/screens/cart_screen.dart';
 import 'package:frontend/features/home/screens/home_screen.dart';
 import 'package:frontend/providers/user_provider.dart';
 import 'package:provider/provider.dart';
@@ -22,9 +23,7 @@ class _BottomBarState extends State<BottomBar> {
   final _pages = [
     const HomeScreen(),
     const AccountScreen(),
-    const Center(
-      child: Text('Cart Page'),
-    ),
+    const CartScreen(),
   ];
 
   void updatePage(int page) {
