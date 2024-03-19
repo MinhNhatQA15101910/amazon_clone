@@ -137,4 +137,74 @@ class AdminService {
 
     return orderList;
   }
+
+  void deleteProduct({
+    required BuildContext context,
+    required Product product,
+    required VoidCallback onSuccess,
+  }) async {
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+
+    try {
+      http.Response res = await http.post(
+        Uri.parse('$uri/admin/delete-product'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'x-auth-token': userProvider.user.token,
+        },
+        body: jsonEncode(
+          {
+            'id': product.id,
+          },
+        ),
+      );
+
+      httpErrorHandler(
+        response: res,
+        // ignore: use_build_context_synchronously
+        context: context,
+        onSuccess: () {
+          onSuccess();
+        },
+      );
+    } catch (e) {
+      // ignore: use_build_context_synchronously
+      showSnackbar(context, e.toString());
+    }
+  }
+
+  void changeOrderStatus({
+    required BuildContext context,
+    required int status,
+    required Order order,
+    required VoidCallback onSuccess,
+  }) async {
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+
+    try {
+      http.Response res = await http.post(
+        Uri.parse('$uri/admin/change-order-status'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'x-auth-token': userProvider.user.token,
+        },
+        body: jsonEncode(
+          {
+            'id': order.id,
+            'status': status,
+          },
+        ),
+      );
+
+      httpErrorHandler(
+        response: res,
+        // ignore: use_build_context_synchronously
+        context: context,
+        onSuccess: onSuccess,
+      );
+    } catch (e) {
+      // ignore: use_build_context_synchronously
+      showSnackbar(context, e.toString());
+    }
+  }
 }

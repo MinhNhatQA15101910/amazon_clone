@@ -15,35 +15,46 @@ class PostsScreen extends StatefulWidget {
 class _PostsScreenState extends State<PostsScreen> {
   final _adminService = AdminService();
 
-  List<Product>? products;
+  List<Product>? _products;
 
   void _navigateToAddProduct() {
     Navigator.of(context).pushNamed(AddProductScreen.routeName);
   }
 
+  void _deleteProduct(Product product, int index) {
+    _adminService.deleteProduct(
+      context: context,
+      product: product,
+      onSuccess: () {
+        _products!.removeAt(index);
+        setState(() {});
+      },
+    );
+  }
+
   @override
   void initState() {
     super.initState();
-    fetchAllProducts();
+    _fetchAllProducts();
   }
 
-  void fetchAllProducts() async {
-    products = await _adminService.fetchAllProducts(context);
+  void _fetchAllProducts() async {
+    _products = await _adminService.fetchAllProducts(context);
     setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
-    return products == null
+    return _products == null
         ? const Loader()
         : Scaffold(
             body: GridView.builder(
-              itemCount: products!.length,
+              itemCount: _products!.length,
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
               ),
               itemBuilder: (context, index) {
-                final productData = products![index];
+                final productData = _products![index];
                 return Column(
                   children: [
                     SizedBox(
@@ -63,7 +74,7 @@ class _PostsScreenState extends State<PostsScreen> {
                           ),
                         ),
                         IconButton(
-                          onPressed: () {},
+                          onPressed: () => _deleteProduct(productData, index),
                           icon: const Icon(
                             Icons.delete_outline,
                           ),
