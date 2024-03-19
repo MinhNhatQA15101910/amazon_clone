@@ -3,6 +3,7 @@ import 'package:frontend/common/widgets/loader.dart';
 import 'package:frontend/constants/global_variables.dart';
 import 'package:frontend/common/widgets/single_product.dart';
 import 'package:frontend/features/account/services/account_service.dart';
+import 'package:frontend/features/order_details/screens/order_details_screen.dart';
 import 'package:frontend/models/order.dart';
 
 class Orders extends StatefulWidget {
@@ -20,12 +21,19 @@ class _OrdersState extends State<Orders> {
   @override
   void initState() {
     super.initState();
-    fetchOrders();
+    _fetchOrders();
   }
 
-  void fetchOrders() async {
+  void _fetchOrders() async {
     _orders = await _accountService.fetchMyOrders(context);
     setState(() {});
+  }
+
+  void _navigateToOrderDetailsScreen(Order order) {
+    Navigator.of(context).pushNamed(
+      OrderDetailsScreen.routeName,
+      arguments: order,
+    );
   }
 
   @override
@@ -70,8 +78,13 @@ class _OrdersState extends State<Orders> {
                   scrollDirection: Axis.horizontal,
                   itemCount: _orders!.length,
                   itemBuilder: (context, index) {
-                    return SingleProduct(
-                        image: _orders![index].products[0].images[0]);
+                    return GestureDetector(
+                      onTap: () =>
+                          _navigateToOrderDetailsScreen(_orders![index]),
+                      child: SingleProduct(
+                        image: _orders![index].products[0].images[0],
+                      ),
+                    );
                   },
                 ),
               ),

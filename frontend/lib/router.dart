@@ -5,8 +5,10 @@ import 'package:frontend/features/admin/screens/add_product_screen.dart';
 import 'package:frontend/features/auth/screens/auth_screen.dart';
 import 'package:frontend/features/home/screens/category_deals_screen.dart';
 import 'package:frontend/features/home/screens/home_screen.dart';
+import 'package:frontend/features/order_details/screens/order_details_screen.dart';
 import 'package:frontend/features/product_details/screens/product_details_screen.dart';
 import 'package:frontend/features/search/screens/search_screen.dart';
+import 'package:frontend/models/order.dart';
 import 'package:frontend/models/product.dart';
 
 Route<dynamic> generateRoute(RouteSettings routeSettings) {
@@ -56,6 +58,14 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
         settings: routeSettings,
         builder: (_) => AddressScreen(
           totalAmount: totalAmount,
+        ),
+      );
+    case OrderDetailsScreen.routeName:
+      var order = routeSettings.arguments as Order;
+      return MaterialPageRoute(
+        settings: routeSettings,
+        builder: (_) => OrderDetailsScreen(
+          order: order,
         ),
       );
     case AddProductScreen.routeName:
