@@ -1,7 +1,10 @@
+import 'package:community_charts_flutter/community_charts_flutter.dart'
+    as charts;
 import 'package:flutter/material.dart';
 import 'package:frontend/common/widgets/loader.dart';
 import 'package:frontend/features/admin/models/sale.dart';
 import 'package:frontend/features/admin/services/admin_service.dart';
+import 'package:frontend/features/admin/widgets/category_products_chart.dart';
 
 class AnalyticsScreen extends StatefulWidget {
   const AnalyticsScreen({super.key});
@@ -41,6 +44,19 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                   fontWeight: FontWeight.bold,
                 ),
               ),
+              SizedBox(
+                height: 250,
+                child: CategoryProductsChart(
+                  seriesList: [
+                    charts.Series(
+                      id: 'Sales',
+                      data: sales!,
+                      domainFn: (Sale sale, _) => sale.label,
+                      measureFn: (Sale sale, _) => sale.earning,
+                    )
+                  ],
+                ),
+              )
             ],
           );
   }
