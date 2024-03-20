@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/constants/global_variables.dart';
+import 'package:frontend/features/admin/screens/analytics_screen.dart';
 import 'package:frontend/features/admin/screens/orders_screen.dart';
 import 'package:frontend/features/admin/screens/posts_screen.dart';
 
@@ -17,9 +18,7 @@ class _AdminScreenState extends State<AdminScreen> {
 
   final _pages = [
     const PostsScreen(),
-    const Center(
-      child: Text('Analytics Page'),
-    ),
+    const AnalyticsScreen(),
     const OrdersScreen(),
   ];
 

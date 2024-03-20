@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:frontend/constants/error_handling.dart';
 import 'package:frontend/constants/global_variables.dart';
 import 'package:frontend/constants/utils.dart';
+import 'package:frontend/features/admin/models/sale.dart';
 import 'package:frontend/models/order.dart';
 import 'package:frontend/models/product.dart';
 import 'package:frontend/providers/user_provider.dart';
@@ -206,5 +207,45 @@ class AdminService {
       // ignore: use_build_context_synchronously
       showSnackbar(context, e.toString());
     }
+  }
+
+  Future<Map<String, dynamic>> getEarnings(BuildContext context) async {
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    List<Sale> sales = [];
+    int totalEarnings = 0;
+    try {
+      http.Response res = await http.get(
+        Uri.parse('$uri/admin/analytics'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'x-auth-token': userProvider.user.token,
+        },
+      );
+
+      httpErrorHandler(
+        response: res,
+        // ignore: use_build_context_synchronously
+        context: context,
+        onSuccess: () {
+          var response = jsonDecode(res.body);
+          totalEarnings = response['totalEarnings'];
+          sales = [
+            Sale('Mobiles', response['mobileEarnings']),
+            Sale('Essentials', response['essentialEarnings']),
+            Sale('Appliances', response['applianceEarnings']),
+            Sale('Books', response['bookEarnings']),
+            Sale('Fashion', response['fashionEarnings']),
+          ];
+        },
+      );
+    } catch (e) {
+      // ignore: use_build_context_synchronously
+      showSnackbar(context, e.toString());
+    }
+
+    return {
+      'sales': sales,
+      'totalEarnings': totalEarnings,
+    };
   }
 }
