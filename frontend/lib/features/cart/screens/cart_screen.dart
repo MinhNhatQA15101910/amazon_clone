@@ -21,7 +21,7 @@ class _CartScreenState extends State<CartScreen> {
     Navigator.of(context).pushNamed(SearchScreen.routeName, arguments: query);
   }
 
-  void _navigateToAddressScreen(int subtotal) {
+  void _navigateToAddressScreen(double subtotal) {
     Navigator.of(context).pushNamed(
       AddressScreen.routeName,
       arguments: subtotal.toString(),
@@ -31,12 +31,12 @@ class _CartScreenState extends State<CartScreen> {
   @override
   Widget build(BuildContext context) {
     final user = context.watch<UserProvider>().user;
-    var subtotal = 0;
+    var subtotal = 0.0;
 
     user.cart
         .map(
           (item) =>
-              subtotal += item['quantity'] * item['product']['price'] as int,
+              subtotal += item['quantity'] * item['product']['price'] as double,
         )
         .toList();
 

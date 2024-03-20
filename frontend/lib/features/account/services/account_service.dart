@@ -4,10 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:frontend/constants/error_handling.dart';
 import 'package:frontend/constants/global_variables.dart';
 import 'package:frontend/constants/utils.dart';
+import 'package:frontend/features/auth/screens/auth_screen.dart';
 import 'package:frontend/models/order.dart';
 import 'package:frontend/providers/user_provider.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AccountService {
   Future<List<Order>> fetchMyOrders(BuildContext context) async {
@@ -42,5 +44,21 @@ class AccountService {
     }
 
     return orderList;
+  }
+
+  void logOut(BuildContext context) async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.setString('x-auth-token', '');
+      Navigator.pushNamedAndRemoveUntil(
+        // ignore: use_build_context_synchronously
+        context,
+        AuthScreen.routeName,
+        (route) => false,
+      );
+    } catch (e) {
+      // ignore: use_build_context_synchronously
+      showSnackbar(context, e.toString());
+    }
   }
 }

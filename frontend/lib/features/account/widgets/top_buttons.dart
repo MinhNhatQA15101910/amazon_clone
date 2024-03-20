@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/features/account/services/account_service.dart';
 import 'package:frontend/features/account/widgets/account_button.dart';
 
-class TopButtons extends StatefulWidget {
+class TopButtons extends StatelessWidget {
   const TopButtons({super.key});
 
-  @override
-  State<TopButtons> createState() => _TopButtonsState();
-}
+  void _logOut(BuildContext context) {
+    AccountService().logOut(context);
+  }
 
-class _TopButtonsState extends State<TopButtons> {
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -30,7 +30,7 @@ class _TopButtonsState extends State<TopButtons> {
           children: [
             AccountButton(
               text: 'Log Out',
-              onTap: () {},
+              onTap: () => _logOut(context),
             ),
             AccountButton(
               text: 'Your Wish List',
